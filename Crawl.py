@@ -1,11 +1,21 @@
-import pdfkit
+# import pdfkit
 
 from bs4 import BeautifulSoup
 import urllib.request
 
+import subprocess
 import os
+import sys
 
-url = "http://www.wuxiaworld.com/martialworld-index/mw-chapter-722/"
+url = sys.argv[1]
+print(url.split('/'))
+titleChapter = url.split('/')[-2].split('-')
+
+title = "".join(titleChapter[:-1]) # title of novel
+firstChapterNum = int(titleChapter[-1])  #chapter number
+
+totalChapters = int(sys.argv[2]) # total chapters to download
+perFile = int(sys.argv[3]) # how many chapters per file
 
 def makePDFWriter(path):
     return PdfFileWriter()
@@ -66,24 +76,45 @@ options = {
 if not article:
     print ("Can't find article")
 else:
+    i = 0
+    
+    for i in range(totalChapters//perFile):
+        
+        j = 0
+        
+        startChapterNum = i+j+firstChapterNum
+        endChapterNum = startChapterNum + perFile
+        
+        filename = title + "-" + str(startChapterNum) + "-" + str(endChapterNum) + ".html"
+        
+        outfile = open(filename, "w") # itermediary html file
+        
+        # opening tags
+        chapters = '''
+            <html xlmns="http://www.w3.org/1999/xhtml" lang="en-US">
+            <head>
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+            </head>
+            <body>
+            '''
 
-    for i in range(30):
-        # # create pdf writer
-        # writer = PdfFileWriter()
-        # outfile = open("test" + str(i) + ".pdf", "w")
-        chapters = ""
-
-        for j in range(10):
+        for j in range(perFile):
             # get text for a chapter
-            chapter = getChapterHtml(article)
-
+            html = getChapterHtml(article)
+            
             # concat chapters
-
-            chapters += chapter.prettify()
-
+            
+            chapters += str(html)
+            
             # go to next link
             link = getNextLink(article)
             article = makeSoup(link).find("article")
             print (link)
-
-        pdfkit.from_string(chapters, "Chapter-" + str(i) + ".pdf", options=options)
+        
+        chapters += "</body></html>" # closing tags
+        outfile.write(chapters)
+        
+        outfile.close() # close the file
+        
+        # kindlegen - create mobi file from html
+        subprocess.Popen(["/Users/HLS/code/KindleGen/kindlegen", filename])
