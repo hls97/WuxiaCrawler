@@ -82,7 +82,7 @@ else:
         
         j = 0
         
-        startChapterNum = i+j+firstChapterNum
+        startChapterNum = (i * perFile)+j+firstChapterNum
         endChapterNum = startChapterNum + perFile
         
         filename = title + "-" + str(startChapterNum) + "-" + str(endChapterNum) + ".html"
@@ -118,3 +118,5 @@ else:
         
         # kindlegen - create mobi file from html
         subprocess.Popen(["/Users/HLS/code/KindleGen/kindlegen", filename])
+    subprocess.run(["mv", "*.html", "html/"])
+    subprocess.run(["mv", "*.mobi", "mobi/"])
