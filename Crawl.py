@@ -17,6 +17,9 @@ firstChapterNum = int(titleChapter[-1])  #chapter number
 totalChapters = int(sys.argv[2]) # total chapters to download
 perFile = int(sys.argv[3]) # how many chapters per file
 
+
+kindlegenpath = "/Users/HLS/code/KindleGen/kindlegen"
+
 def makePDFWriter(path):
     return PdfFileWriter()
 
@@ -77,18 +80,18 @@ if not article:
     print ("Can't find article")
 else:
     i = 0
-    
+
     for i in range(totalChapters//perFile):
-        
+
         j = 0
-        
+
         startChapterNum = (i * perFile)+j+firstChapterNum
         endChapterNum = startChapterNum + perFile
-        
+
         filename = title + "-" + str(startChapterNum) + "-" + str(endChapterNum) + ".html"
-        
+
         outfile = open(filename, "w") # itermediary html file
-        
+
         # opening tags
         chapters = '''
             <html xlmns="http://www.w3.org/1999/xhtml" lang="en-US">
@@ -101,22 +104,20 @@ else:
         for j in range(perFile):
             # get text for a chapter
             html = getChapterHtml(article)
-            
+
             # concat chapters
-            
+
             chapters += str(html)
-            
+
             # go to next link
             link = getNextLink(article)
             article = makeSoup(link).find("article")
             print (link)
-        
+
         chapters += "</body></html>" # closing tags
         outfile.write(chapters)
-        
+
         outfile.close() # close the file
-        
+
         # kindlegen - create mobi file from html
-        subprocess.Popen(["/Users/HLS/code/KindleGen/kindlegen", filename])
-    subprocess.run(["mv", "*.html", "html/"])
-    subprocess.run(["mv", "*.mobi", "mobi/"])
+        subprocess.Popen([kindlegenpath, filename])
