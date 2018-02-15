@@ -17,3 +17,4 @@ python Crawl.py http://www.wuxiaworld.com/martialworld-index/mw-chapter-25/ 500 
 ```
 pip install beautifulsoup4
 ```
+* Process may not end; 'ctrl-c'
