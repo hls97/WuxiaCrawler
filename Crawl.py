@@ -88,7 +88,7 @@ else:
         startChapterNum = (i * perFile)+j+firstChapterNum
         endChapterNum = startChapterNum + perFile
 
-        filename = title + "-" + str(startChapterNum) + "-" + str(endChapterNum) + ".html"
+        filename = title + "-" + str(startChapterNum) + "-" + str(endChapterNum - 1) + ".html"
 
         outfile = open(filename, "w") # itermediary html file
 

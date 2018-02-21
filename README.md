@@ -18,3 +18,4 @@ python Crawl.py http://www.wuxiaworld.com/martialworld-index/mw-chapter-25/ 500 
 pip install beautifulsoup4
 ```
 * Process may not end; 'ctrl-c'
+* If there is some extra chapter such as '150b', the chapter range will be wrong (this will be fixed soon)
